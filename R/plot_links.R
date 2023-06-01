@@ -28,7 +28,7 @@
 plot_links <- function(data,
                        names = "all",
                        starttime = "1960-01-01 00:00",
-                       endtime = as.character(as.POSIXct(Sys.time(),tz = "UTC")),
+                       endtime = "2200-01-01 00:00",
                        use_domains = TRUE,
                        exclude_long = 50,
                        min_occur = 1,
@@ -90,17 +90,17 @@ plot_links <- function(data,
   if (!c(is.na(exclude_long) | is.numeric(exclude_long))) stop("exclude_long has to be either NA or a numeric value")
 
   # setting starttime
-  if (anytime(starttime, asUTC=TRUE,tz="UTC") <= min(anytime(data$DateTime, asUTC=TRUE,tz="UTC"))) {
-    starttime <- min(anytime(data$DateTime, asUTC=TRUE,tz="UTC"))
+  if (as.POSIXct(starttime,tz="UTC") <= min(data$DateTime)) {
+    starttime <- min(data$DateTime)
   } else {
-    starttime <- anytime(starttime, asUTC=TRUE,tz="UTC")
+    starttime <- as.POSIXct(starttime,tz="UTC")
   }
 
   # setting endtime
-  if (anytime(endtime, asUTC=TRUE,tz="UTC") >= max(anytime(data$DateTime, asUTC=TRUE,tz="UTC"))) {
+  if (as.POSIXct(endtime,tz="UTC") >= max(data$DateTime)) {
     endtime <- max(anytime(data$DateTime, asUTC=TRUE,tz="UTC"))
   } else {
-    endtime <- anytime(endtime, asUTC=TRUE,tz="UTC")
+    endtime <- as.POSIXct(endtime,tz="UTC")
   }
 
   # setting names argument

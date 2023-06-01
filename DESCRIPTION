@@ -2,8 +2,8 @@ Package: WhatsR
 Type: Package
 Title: Parsing, Anonymizing and Visualizing Exported 'WhatsApp' Chat
         Logs
-Version: 1.0
-Date: 2023-04-27
+Version: 1.0.1
+Date: 2023-05-31
 Author: Julian Kohne <julian.kohne@gesis.org>
 Maintainer: Julian Kohne <julian.kohne@gesis.org>
 Description: Imports 'WhatsApp' chat logs and parses them into
@@ -19,9 +19,9 @@ Imports: stringi, qdapRegex, readr, tokenizers, rvest, XML, xml2,
         methods
 Encoding: UTF-8
 RoxygenNote: 7.2.3
-Suggests: testthat (>= 3.0.0)
+Suggests: extrafont, tm, testthat (>= 3.0.0)
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2023-05-26 10:17:52 UTC; juko
+Packaged: 2023-06-01 11:54:25 UTC; juko
 Repository: CRAN
-Date/Publication: 2023-05-26 19:10:02 UTC
+Date/Publication: 2023-06-01 22:50:14 UTC

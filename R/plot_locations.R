@@ -30,7 +30,7 @@
 plot_locations <- function(data,
                            names = "all",
                            starttime = "1960-01-01 00:00",
-                           endtime = as.character(as.POSIXct(Sys.time(),tz = "UTC")),
+                           endtime = "2200-01-01 00:00",
                            mapzoom = 5,
                            return_data = FALSE,
                            jitter_value = 0.01,
@@ -134,26 +134,48 @@ plot_locations <- function(data,
     ceiling(max(LatLong[, 3])) + map_leeway
   )
 
-  # Fetch the map
-  map <- get_map(location = location, source = "stamen", zoom = mapzoom, messaging = FALSE)
-
-  # Add the points layer
-  map <- ggmap(map) +
-    geom_point(data = LatLong, aes(x = Lon, y = Lat, fill = Sender), color = "black", size = 2, pch = 21) +
-    labs(
-      title = "Locations in Conversation",
-      subtitle = paste(starttime, " - ", endtime),
-      x = "Longitude",
-      y = "Latitude"
+  # Fetch the map [This should fail gracefully when there's no internet connection]
+  map <- tryCatch(
+      {
+        # trying to download map data
+        get_map(location = location, source = "stamen", zoom = mapzoom, messaging = FALSE)
+      },
+      error=function(err) {
+        message("Could not download Stamen map data. Do you have an Internet connection?")
+        #message(err)
+        return(NULL)
+      },
+      warning=function(warn) {
+        message("get_map()= returned a warning:")
+        message(warn)
+        return(NULL)
+      }
     )
 
-  # plot
-  plot(map)
+  if(!is.null(map)) {
 
-  # returning LatLon data if desired
-  if (return_data == TRUE) {
-    return(LatLong)
-  } else {
-    return(map)
-  }
+    # Add the points layer
+    map <- ggmap(map) +
+      geom_point(data = LatLong, aes(x = Lon, y = Lat, fill = Sender), color = "black", size = 2, pch = 21) +
+      labs(
+        title = "Locations in Conversation",
+        subtitle = paste(starttime, " - ", endtime),
+        x = "Longitude",
+        y = "Latitude"
+      )
+
+    # plot
+    plot(map)
+
+    # returning LatLon data if desired
+    if (return_data == TRUE) {
+      return(LatLong)
+    } else {
+      return(map)
+    }
+
+
+  } else{return(NA)}
+
+
 }

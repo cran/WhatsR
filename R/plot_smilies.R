@@ -22,7 +22,7 @@
 plot_smilies <- function(data,
                          names = "all",
                          starttime = "1960-01-01 00:00",
-                         endtime = as.character(as.POSIXct(Sys.time(),tz = "UTC")),
+                         endtime = "2200-01-01 00:00",
                          min_occur = 1,
                          return_data = FALSE,
                          smilie_vec = "all",
@@ -58,17 +58,17 @@ plot_smilies <- function(data,
   if (!is.logical(exclude_sm)) stop("'exclude_sm' has to be either TRUE or FALSE.")
 
   # setting starttime
-  if (anytime(starttime, asUTC=TRUE,tz="UTC") <= min(anytime(data$DateTime, asUTC=TRUE,tz="UTC"))) {
-    starttime <- min(anytime(data$DateTime, asUTC=TRUE,tz="UTC"))
+  if (as.POSIXct(starttime,tz="UTC") <= min(data$DateTime)) {
+    starttime <- min(data$DateTime)
   } else {
-    starttime <- anytime(starttime, asUTC=TRUE,tz="UTC")
+    starttime <- as.POSIXct(starttime,tz="UTC")
   }
 
   # setting endtime
-  if (anytime(endtime, asUTC=TRUE,tz="UTC") >= max(anytime(data$DateTime, asUTC=TRUE,tz="UTC"))) {
+  if (as.POSIXct(endtime,tz="UTC") >= max(data$DateTime)) {
     endtime <- max(anytime(data$DateTime, asUTC=TRUE,tz="UTC"))
   } else {
-    endtime <- anytime(endtime, asUTC=TRUE,tz="UTC")
+    endtime <- as.POSIXct(endtime,tz="UTC")
   }
 
   # setting names argument
