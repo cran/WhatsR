@@ -2,8 +2,8 @@
 #' @description Visualizes the reply times and reaction times to messages per author
 #' @param data A 'WhatsApp' chat log that was parsed with \code{\link[WhatsR]{parse_chat}}.
 #' @param names A vector of author names that the plots will be restricted to.
-#' @param starttime Datetime that is used as the minimum boundary for exclusion. Is parsed with \code{\link[anytime]{anytime}}. Standard format is "yyyy-mm-dd hh:mm". Is interpreted as UTC to be compatible with 'WhatsApp' timestamps.
-#' @param endtime Datetime that is used as the maximum boundary for exclusion. Is parsed with \code{\link[anytime]{anytime}}. Standard format is "yyyy-mm-dd hh:mm". Is interpreted as UTC to be compatible with 'WhatsApp' timestamps.
+#' @param starttime Datetime that is used as the minimum boundary for exclusion. Is parsed with \code{\link[base]{as.POSIXct}}. Standard format is "yyyy-mm-dd hh:mm". Is interpreted as UTC to be compatible with 'WhatsApp' timestamps.
+#' @param endtime Datetime that is used as the maximum boundary for exclusion. Is parsed with \code{\link[base]{as.POSIXct}}. Standard format is "yyyy-mm-dd hh:mm". Is interpreted as UTC to be compatible with 'WhatsApp' timestamps.
 #' @param return_data If TRUE, returns a data frame of response times extracted from the chat for more elaborate plotting. Default is FALSE.
 #' @param aggregate_sessions If TRUE, concurrent messages of the same author are aggregated into one session. Default is TRUE.
 #' @param plot Type of plot to be returned, options are "box" and "heatmap".
@@ -21,7 +21,7 @@
 #' @importFrom dplyr summarise
 #' @importFrom methods is
 #' @export
-#' @return Plots for Replytimes or Reactiontimes of authors
+#' @return Plots for Replytimes or Reactiontimes of authors. Input will be ordered by TimeOrder column.
 #' @examples
 #' data <- readRDS(system.file("ParsedWhatsAppChat.rds", package = "WhatsR"))
 #' plot_replytimes(data)
@@ -43,12 +43,13 @@ plot_replytimes <- function(data,
   # catching bad params
 
   # checking data
-  if(!is.data.frame(data)){stop("'data' must be a dataframe parsed with parse_chat()")}
+  if (!is.data.frame(data)) {stop("'data' must be a dataframe parsed with parse_chat()")}
+  if (!is.numeric(data$TimeOrder)) {stop("'TimeOrder' must be a numeric column in input dataframe")}
 
   # start- and endtime are convertable to POSIXct
-  if (is.character(starttime) == FALSE | is.na(anytime(starttime, asUTC=TRUE,tz="UTC"))) stop("starttime has to be a character string in the form of 'yyyy-mm-dd hh:mm' that can be converted by anytime().")
-  if (is.character(endtime) == FALSE | is.na(anytime(endtime, asUTC=TRUE,tz="UTC"))) stop("endtime has to be a character string in the form of 'yyyy-mm-dd hh:mm' that can be converted by anytime().")
-  if (anytime(starttime, asUTC=TRUE,tz="UTC") >= anytime(endtime, asUTC=TRUE,tz="UTC")) stop("starttime has to be before endtime.")
+  if (is.character(starttime) == FALSE | is.na(as.POSIXct(starttime,tz = "UTC"))) stop("starttime has to be a character string in the form of 'yyyy-mm-dd hh:mm' that can be converted by as.POSIXct().")
+  if (is.character(endtime) == FALSE | is.na(as.POSIXct(endtime,tz = "UTC"))) stop("endtime has to be a character string in the form of 'yyyy-mm-dd hh:mm' that can be converted by as.POSIXct().")
+  if (as.POSIXct(starttime,tz = "UTC") >= as.POSIXct(endtime,tz = "UTC")) stop("starttime has to be before endtime.")
 
   # return_data must be bool
   if (!is.logical(return_data)) stop("'return_data' has to be either TRUE or FALSE.")
@@ -66,17 +67,17 @@ plot_replytimes <- function(data,
   if (!is.logical(exclude_sm)) stop("exclude_sm has to be either TRUE or FALSE.")
 
   # setting starttime
-  if (as.POSIXct(starttime,tz="UTC") <= min(data$DateTime)) {
+  if (as.POSIXct(starttime,tz = "UTC") <= min(data$DateTime)) {
     starttime <- min(data$DateTime)
   } else {
-    starttime <- as.POSIXct(starttime,tz="UTC")
+    starttime <- as.POSIXct(starttime,tz = "UTC")
   }
 
   # setting endtime
-  if (as.POSIXct(endtime,tz="UTC") >= max(data$DateTime)) {
-    endtime <- max(anytime(data$DateTime, asUTC=TRUE,tz="UTC"))
+  if (as.POSIXct(endtime,tz = "UTC") >= max(data$DateTime)) {
+    endtime <- max(data$DateTime)
   } else {
-    endtime <- as.POSIXct(endtime,tz="UTC")
+    endtime <- as.POSIXct(endtime,tz = "UTC")
   }
 
   # setting names argument
@@ -97,6 +98,9 @@ plot_replytimes <- function(data,
 
   # limiting data to time and namescope
   data <- data[is.element(data$Sender, names) & data$DateTime >= starttime & data$DateTime <= endtime, ]
+
+  # Ordering data by TimeOrder
+  data <- data[order(data$TimeOrder),]
 
   # aggregating sessions into messages
   if (aggregate_sessions == TRUE) {
@@ -179,8 +183,12 @@ plot_replytimes <- function(data,
 
   if (plot == "box") {
     if (type == "replytime") {
+
+      # removing NA values before plotting
+      Plottingframe <- Sessionframe[!is.na(Sessionframe$ReactionTime),]
+
       # Distribution of response times per person (logscale)
-      out <- ggplot(Sessionframe, aes(x = Sender, y = log(ReactionTime + 1), color = Sender)) +
+      out <- ggplot(Plottingframe, aes(x = Sender, y = log(ReactionTime + 1), color = Sender)) +
         theme_minimal() +
         geom_boxplot() +
         theme(axis.text.x = element_text(angle = 90, hjust = 0.95, vjust = 0.2)) +
@@ -193,8 +201,12 @@ plot_replytimes <- function(data,
     }
 
     if (type == "reactiontime") {
-      # Distribution of responsd to times per person (logscale)
-      out <- ggplot(Sessionframe, aes(x = Sender, y = log(RepliedToAfter + 1), color = Sender)) +
+
+      # removing NA values before plotting
+      Plottingframe <- Sessionframe[!is.na(Sessionframe$RepliedToAfter),]
+
+      # Distribution of responsetimes per person (logscale)
+      out <- ggplot(Plottingframe, aes(x = Sender, y = log(RepliedToAfter + 1), color = Sender)) +
         theme_minimal() +
         geom_boxplot() +
         theme(axis.text.x = element_text(angle = 90, hjust = 0.95, vjust = 0.2)) +

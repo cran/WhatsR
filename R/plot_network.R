@@ -2,8 +2,8 @@
 #' @description Plots a network for replies between authors in chat logs. Each message is evaluated as a reply to the previous one.
 #' @param data A 'WhatsApp' chatlog that was parsed with \code{\link[WhatsR]{parse_chat}}.
 #' @param names A vector of author names that the visualization will be restricted to. Non-listed authors will be removed.
-#' @param starttime Datetime that is used as the minimum boundary for exclusion. Is parsed with \code{\link[anytime]{anytime}}. Standard format is "yyyy-mm-dd hh:mm". Is interpreted as UTC to be compatible with 'WhatsApp' timestamps.
-#' @param endtime Datetime that is used as the maximum boundary for exclusion. Is parsed with \code{\link[anytime]{anytime}}. Standard format is "yyyy-mm-dd hh:mm". Is interpreted as UTC to be compatible with 'WhatsApp' timestamps.
+#' @param starttime Datetime that is used as the minimum boundary for exclusion. Is parsed with \code{\link[base]{as.POSIXct}}. Standard format is "yyyy-mm-dd hh:mm". Is interpreted as UTC to be compatible with 'WhatsApp' timestamps.
+#' @param endtime Datetime that is used as the maximum boundary for exclusion. Is parsed with \code{\link[base]{as.POSIXct}}. Standard format is "yyyy-mm-dd hh:mm". Is interpreted as UTC to be compatible with 'WhatsApp' timestamps.
 #' @param return_data If TRUE, returns a data frame of subsequent interactions with senders and recipients. Default is FALSE.
 #' @param collapse_sessions Whether multiple subsequent messages by the same sender should be collapsed into one row. Default is FALSE.
 #' @param edgetype What type of content is displayed as an edge. Must be one of "TokCount","EmojiCount","SmilieCount","LocationCount","URLCount","MediaCount" or "n".
@@ -17,7 +17,7 @@
 #' @importFrom visNetwork visNetwork visEdges
 #' @importFrom methods is
 #' @export
-#' @return A network visualization of authors in 'WhatsApp' chat logs where each subsequent message is considered a reply to the previous one.
+#' @return A network visualization of authors in 'WhatsApp' chat logs where each subsequent message is considered a reply to the previous one. Input will be ordered by TimeOrder column.
 #' @examples
 #' data <- readRDS(system.file("ParsedWhatsAppChat.rds", package = "WhatsR"))
 #' plot_network(data)
@@ -38,12 +38,13 @@ plot_network <- function(data,
   # catching bad params
 
   # checking data
-  if(!is.data.frame(data)){stop("'data' must be a dataframe parsed with parse_chat()")}
+  if (!is.data.frame(data)) {stop("'data' must be a dataframe parsed with parse_chat()")}
+  if (!is.numeric(data$TimeOrder)) {stop("'TimeOrder' must be a numeric column in input dataframe")}
 
   # start- and endtime are convertable to POSIXct
-  if (is.character(starttime) == FALSE | is.na(anytime(starttime, asUTC=TRUE,tz="UTC"))) stop("starttime has to be a character string in the form of 'yyyy-mm-dd hh:mm' that can be converted by anytime().")
-  if (is.character(endtime) == FALSE | is.na(anytime(endtime, asUTC=TRUE,tz="UTC"))) stop("endtime has to be a character string in the form of 'yyyy-mm-dd hh:mm' that can be converted by anytime().")
-  if (anytime(starttime, asUTC=TRUE,tz="UTC") >= anytime(endtime, asUTC=TRUE,tz="UTC")) stop("starttime has to be before endtime.")
+  if (is.character(starttime) == FALSE | is.na(as.POSIXct(starttime,tz = "UTC"))) stop("starttime has to be a character string in the form of 'yyyy-mm-dd hh:mm' that can be converted by as.POSIXct().")
+  if (is.character(endtime) == FALSE | is.na(as.POSIXct(endtime,tz = "UTC"))) stop("endtime has to be a character string in the form of 'yyyy-mm-dd hh:mm' that can be converted by as.POSIXct().")
+  if (as.POSIXct(starttime,tz = "UTC") >= as.POSIXct(endtime,tz = "UTC")) stop("starttime has to be before endtime.")
 
   # return_data must be bool
   if (!is.logical(return_data)) stop("return_data has to be either TRUE or FALSE.")
@@ -58,17 +59,17 @@ plot_network <- function(data,
   if (!is.logical(exclude_sm)) stop("exclude_sm has to be either TRUE or FALSE.")
 
   # setting starttime
-  if (as.POSIXct(starttime,tz="UTC") <= min(data$DateTime)) {
+  if (as.POSIXct(starttime,tz = "UTC") <= min(data$DateTime)) {
     starttime <- min(data$DateTime)
   } else {
-    starttime <- as.POSIXct(starttime,tz="UTC")
+    starttime <- as.POSIXct(starttime,tz = "UTC")
   }
 
   # setting endtime
-  if (as.POSIXct(endtime,tz="UTC") >= max(data$DateTime)) {
-    endtime <- max(anytime(data$DateTime, asUTC=TRUE,tz="UTC"))
+  if (as.POSIXct(endtime,tz = "UTC") >= max(data$DateTime)) {
+    endtime <- max(data$DateTime)
   } else {
-    endtime <- as.POSIXct(endtime,tz="UTC")
+    endtime <- as.POSIXct(endtime,tz = "UTC")
   }
 
   # setting names argument
@@ -90,8 +91,10 @@ plot_network <- function(data,
   # limiting data to time and namescope
   data <- data[is.element(data$Sender, names) & data$DateTime >= starttime & data$DateTime <= endtime, ]
 
+  # Ordering data by TimeOrder
+  data <- data[order(data$TimeOrder),]
+
   # We need to exclude the WhatsApp system messages
-  # TODO: Rerun tests -> If they fail, remove if clause and always remove system messages
   if (exclude_sm == TRUE) {
 
     Tempframe <- data[data$Sender != "WhatsApp System Message", ]
@@ -162,7 +165,7 @@ plot_network <- function(data,
     # source: https://www.r-bloggers.com/2020/06/detecting-streaks-in-r/
     get_streaks <- function(vec) {
       x <- data.frame(trials = vec)
-      x <- x %>% mutate(lagged = lag(trials)) %>%
+      x <- x %>% mutate(lagged = dplyr::lag(trials, default = NA)) %>% # IMPORTANT: This must be dplyr::lag(), not stats::lag()
         mutate(start = (trials != lagged))
       x[1, "start"] <- TRUE
       x <- x %>% mutate(streak_id = cumsum(start))
@@ -249,8 +252,6 @@ plot_network <- function(data,
     }
 
     # combining into dataset
-    # TODO: Error in `data.frame(..., check.names = FALSE)`: arguments imply differing number of rows: 1, 34 [only occurs in testing, not in use]
-    # possibly an issue with locale, timezone etc?
     NetFrame <- cbind.data.frame(
       Sender,
       AnsweredTo,

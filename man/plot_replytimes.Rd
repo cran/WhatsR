@@ -21,9 +21,9 @@ plot_replytimes(
 
 \item{names}{A vector of author names that the plots will be restricted to.}
 
-\item{starttime}{Datetime that is used as the minimum boundary for exclusion. Is parsed with \code{\link[anytime]{anytime}}. Standard format is "yyyy-mm-dd hh:mm". Is interpreted as UTC to be compatible with 'WhatsApp' timestamps.}
+\item{starttime}{Datetime that is used as the minimum boundary for exclusion. Is parsed with \code{\link[base]{as.POSIXct}}. Standard format is "yyyy-mm-dd hh:mm". Is interpreted as UTC to be compatible with 'WhatsApp' timestamps.}
 
-\item{endtime}{Datetime that is used as the maximum boundary for exclusion. Is parsed with \code{\link[anytime]{anytime}}. Standard format is "yyyy-mm-dd hh:mm". Is interpreted as UTC to be compatible with 'WhatsApp' timestamps.}
+\item{endtime}{Datetime that is used as the maximum boundary for exclusion. Is parsed with \code{\link[base]{as.POSIXct}}. Standard format is "yyyy-mm-dd hh:mm". Is interpreted as UTC to be compatible with 'WhatsApp' timestamps.}
 
 \item{return_data}{If TRUE, returns a data frame of response times extracted from the chat for more elaborate plotting. Default is FALSE.}
 
@@ -36,7 +36,7 @@ plot_replytimes(
 \item{exclude_sm}{If TRUE, excludes the 'WhatsApp' system messages from the data. Default is FALSE.}
 }
 \value{
-Plots for Replytimes or Reactiontimes of authors
+Plots for Replytimes or Reactiontimes of authors. Input will be ordered by TimeOrder column.
 }
 \description{
 Visualizes the reply times and reaction times to messages per author

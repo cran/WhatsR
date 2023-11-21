@@ -20,9 +20,9 @@ plot_network(
 
 \item{names}{A vector of author names that the visualization will be restricted to. Non-listed authors will be removed.}
 
-\item{starttime}{Datetime that is used as the minimum boundary for exclusion. Is parsed with \code{\link[anytime]{anytime}}. Standard format is "yyyy-mm-dd hh:mm". Is interpreted as UTC to be compatible with 'WhatsApp' timestamps.}
+\item{starttime}{Datetime that is used as the minimum boundary for exclusion. Is parsed with \code{\link[base]{as.POSIXct}}. Standard format is "yyyy-mm-dd hh:mm". Is interpreted as UTC to be compatible with 'WhatsApp' timestamps.}
 
-\item{endtime}{Datetime that is used as the maximum boundary for exclusion. Is parsed with \code{\link[anytime]{anytime}}. Standard format is "yyyy-mm-dd hh:mm". Is interpreted as UTC to be compatible with 'WhatsApp' timestamps.}
+\item{endtime}{Datetime that is used as the maximum boundary for exclusion. Is parsed with \code{\link[base]{as.POSIXct}}. Standard format is "yyyy-mm-dd hh:mm". Is interpreted as UTC to be compatible with 'WhatsApp' timestamps.}
 
 \item{return_data}{If TRUE, returns a data frame of subsequent interactions with senders and recipients. Default is FALSE.}
 
@@ -33,7 +33,7 @@ plot_network(
 \item{exclude_sm}{If TRUE, excludes the 'WhatsApp' system messages from the descriptive statistics. Default is FALSE.}
 }
 \value{
-A network visualization of authors in 'WhatsApp' chat logs where each subsequent message is considered a reply to the previous one.
+A network visualization of authors in 'WhatsApp' chat logs where each subsequent message is considered a reply to the previous one. Input will be ordered by TimeOrder column.
 }
 \description{
 Plots a network for replies between authors in chat logs. Each message is evaluated as a reply to the previous one.
