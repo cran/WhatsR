@@ -15,7 +15,6 @@
 #' of smilies containing all mentions from https://de.wiktionary.org/w/index.php?title=Verzeichnis:International/Smileys
 #' and manually added ones.
 #' @param rpnl Replace newline. A character string for replacing line breaks within messages for the parsed message for better readability. Default is " start_newline ".
-#' @param rpom Replace omitted media. A character string replacing the indicator for omitted media files for better readability. Default is " media_omitted ".
 #' @param verbose Prints progress messages for parse_chat() to the console if TRUE, default is FALSE.
 #' @importFrom readr parse_character
 #' @importFrom qdapRegex rm_url rm_between ex_emoticon rm_non_words
@@ -38,7 +37,6 @@ parse_chat <- function(path,
                        emoji_dictionary = "internal",
                        smilie_dictionary = "wikipedia",
                        rpnl = " start_newline ",
-                       rpom = " media_omitted ",
                        verbose = FALSE
                        ) {
 
@@ -51,7 +49,6 @@ parse_chat <- function(path,
   if (!(emoji_dictionary == "internal" | file.exists(emoji_dictionary))) {stop("'emoji_dictionary' must be 'internal' or valid path to a dictionary scraped using download_emoji()")}# TODO
   if (!(smilie_dictionary == "emoticons" | smilie_dictionary == "wikipedia")) {stop("'smilie_dictionary' must be 'emoticons' or 'wikipedia'")}
   if (!is.character(rpnl)) {stop("'rpnl' must be a character string")}
-  if (!is.character(rpom)) {stop("'rpom' must be a character string")}
   if (!is.logical(verbose)) {stop("'verbose' must be either TRUE or FALSE")}
 
   # Importing raw chat file
@@ -61,8 +58,8 @@ parse_chat <- function(path,
   if (verbose) {cat("Imported raw chat file \U2713 \n")}
 
   # Regex that detects 24h/ampm, american date format, european date format and all combinations for ios and android
-  TimeRegex_android <- c("(?!^)(?=((\\d{2}\\.\\d{2}\\.\\d{2})|(\\d{1,2}\\/\\d{1,2}\\/\\d{2})),\\s\\d{2}\\:\\d{2}((\\s\\-)|(\\s(?i:(am|pm))\\s\\-)))")
-  TimeRegex_ios <- c("(?!^)(?=\\[((\\d{2}\\.\\d{2}\\.\\d{2})|(\\d{1,2}\\/\\d{1,2}\\/\\d{2})),\\s\\d{1,2}\\:\\d{2}((\\:\\d{2}\\s(?i:(pm|am)))|(\\s(?i:(pm|am)))|(\\:\\d{2}\\])|(\\:\\d{2})|(\\s))\\])")
+  TimeRegex_android <- c("(?!^)(?=((\\d{2}\\.\\d{2}\\.\\d{2})|(\\d{1,2}\\/\\d{1,2}\\/\\d{2,4})),\\s\\d{2}\\:\\d{2}((\\s\\-)|(\\s(?i:(am|pm))\\s\\-)))")
+  TimeRegex_ios <- c("(?!^)(?=\\[((\\d{2}\\.\\d{2}\\.\\d{2})|(\\d{1,2}\\/\\d{1,2}\\/\\d{2,4})),\\s\\d{1,2}\\:\\d{2}((\\:\\d{2}\\s(?i:(pm|am)))|(\\s(?i:(pm|am)))|(\\:\\d{2}\\])|(\\:\\d{2})|(\\s))\\])")
 
 
   ### reducing RawChat to workable size for language and os detection (if necessary) ####
@@ -183,6 +180,12 @@ parse_chat <- function(path,
   SafetyNumberChange <- Indicators$SafetyNumberChange # Can contain PII
   GroupCallStarted <- Indicators$GroupCallStarted # Can contain PII
   GroupVideoCallStarted <- Indicators$GroupVideoCallStarted # Can contain PII
+  VoiceCallTaken <- Indicators$VoiceCallTaken
+  VideoCallTaken <- Indicators$VideoCallTaken
+  VoiceCallNoResponse <- Indicators$VoiceCallNoResponse
+  VideoCallNoResponse <- Indicators$VideoCallNoResponse
+  NewContactCreation <- Indicators$NewContactCreation
+  FoursquareLoc <- Indicators$FoursquareLoc
 
   # print info
   if (verbose) {cat(paste("Imported matching strings for: ", paste(language, os, sep = " "), " \U2713 \n", sep = ""))}
@@ -193,7 +196,7 @@ parse_chat <- function(path,
   # Deleting left-to-right markers if present
   ReplacedSpecialCharactersChat <- gsub("\u200e", "", ReplacedSpecialCharactersChat)
 
-  # Deleting zero-width no break space sif present
+  # Deleting zero-width no break spaces if present
   ReplacedSpecialCharactersChat <- gsub("\uFEFF", "", ReplacedSpecialCharactersChat)
 
   # printing info
@@ -210,7 +213,8 @@ parse_chat <- function(path,
       sent_location = SentLocation,
       live_location = LiveLocation,
       datetime_indicator = TimeRegex,
-      media_replace = OmittanceIndicator
+      media_replace = OmittanceIndicator,
+      foursquare_loc = FoursquareLoc
     )
 
     # printing info
@@ -226,7 +230,8 @@ parse_chat <- function(path,
       sent_location = SentLocation,
       live_location = LiveLocation,
       datetime_indicator = TimeRegex,
-      media_replace = OmittanceIndicator
+      media_replace = OmittanceIndicator,
+      foursquare_loc = FoursquareLoc
     )
 
     # printing info
@@ -253,13 +258,31 @@ parse_chat <- function(path,
     DeletedMessage,
     SafetyNumberChange,
     GroupCallStarted,
-    GroupVideoCallStarted
+    GroupVideoCallStarted,
+    VoiceCallTaken,
+    VideoCallTaken,
+    VoiceCallNoResponse,
+    VideoCallNoResponse,
+    NewContactCreation
   )
 
   # checking whether a WhatsApp message was parsed into the sender column
   WAMessagePresent <- unlist(stri_extract_all_regex(str = ParsedChat$Sender, pattern = paste(WAStrings, collapse = "|")))
   ParsedChat$SystemMessage <- WAMessagePresent
   ParsedChat$Sender[!is.na(WAMessagePresent)] <- "WhatsApp System Message"
+
+  # checking Whatsapp System Messages that are erroneously attributed to a chat participant:
+  StartMessagePresent <- unlist(stri_extract_all_regex(str = ParsedChat$Message, pattern = StartMessage))
+  ParsedChat$SystemMessage[is.na(ParsedChat$SystemMessage)] <- StartMessagePresent[is.na(ParsedChat$SystemMessage)]
+  ParsedChat$Sender[!is.na(StartMessagePresent)] <- "WhatsApp System Message"
+  ParsedChat$Message[!is.na(StartMessagePresent)] <- NA
+
+  # number change detection
+  NumberChangePresent <- unlist(stri_extract_all_regex(str = ParsedChat$Message, pattern = UserNumberChangeUnknown))
+  ParsedChat$SystemMessage[is.na(ParsedChat$SystemMessage)] <- NumberChangePresent[is.na(ParsedChat$SystemMessage)]
+  ParsedChat$Sender[!is.na(NumberChangePresent)] <- "WhatsApp System Message"
+  ParsedChat$Message[!is.na(NumberChangePresent)] <- NA
+
 
   # printing info
   if (verbose) {cat("Differentiated System Messages from User generated content \U2713 \n")}
@@ -386,6 +409,7 @@ parse_chat <- function(path,
   if (verbose) {cat("Removed emoji, newlines and media file indicators from flat text column \U2713 \n")}
 
   # deleting the file attachments from flattened message
+  # FIXME: https://github.com/gesiscss/WhatsR/issues/21
   if (os == "android") {
     Flat <- gsub(paste0("(.)*?", substring(DeleteAttached, 4, nchar(DeleteAttached) - 1), "($|\\s)"), "", Flat, perl = TRUE)
   } else if (os == "ios") {
@@ -434,6 +458,13 @@ parse_chat <- function(path,
     perl = T
   )
 
+  Flat <- gsub(
+    x = Flat,
+    pattern = FoursquareLoc,
+    replacement = NA,
+    perl = T
+  )
+
   # printing info
   if (verbose) {cat("Deleted sent location indicators from flat text column \U2713 \n")}
 
@@ -445,13 +476,42 @@ parse_chat <- function(path,
     perl = T
   )
 
+  # deleting live locations with captions (without deleting the caption)
+  # FIXME: This is only for german -> fix
+  #Flat <- gsub(
+  #  x = Flat,
+  #  pattern = "^Live-Standort wird geteilt\\.",
+  #  replacement = "",
+  # perl = T
+  #)
+
   # printing info
   if (verbose) {cat("Deleted live location indicators from flat text column \U2713 \n")}
+
+  ## Voice Calls
+  # TODO: For iOS, the indicators include invisible lrm and rlm characters (\u200E and \u200F)
+  # If something breaks with the removal of indicators, these are a likely culprit
 
   # replacing missed voice calls in flattened message
   Flat <- gsub(
     x = Flat,
     pattern = MissedCallVoice,
+    replacement = NA,
+    perl = T
+  )
+
+  # replacing taken voice calls in flattened message
+  Flat <- gsub(
+    x = Flat,
+    pattern = VoiceCallTaken,
+    replacement = NA,
+    perl = T
+  )
+
+  # replacing unanswered voice calls in flattened message
+  Flat <- gsub(
+    x = Flat,
+    pattern = VoiceCallNoResponse,
     replacement = NA,
     perl = T
   )
@@ -463,6 +523,32 @@ parse_chat <- function(path,
     replacement = NA,
     perl = T
   )
+
+  # replacing taken video calls in flattened message
+  Flat <- gsub(
+    x = Flat,
+    pattern = VideoCallTaken,
+    replacement = NA,
+    perl = T
+  )
+
+  # replacing unanswered video calls in flattened message
+  Flat <- gsub(
+    x = Flat,
+    pattern = VideoCallNoResponse,
+    replacement = NA,
+    perl = T
+  )
+
+  ## Removing deleted messages
+  Flat <- gsub(
+    x = Flat,
+    pattern = DeletedMessage,
+    replacement = NA,
+    perl = T
+  )
+
+
 
   # printing info
   if (verbose) {cat("Deleted voice call indicators from flat text column \U2713 \n")}
@@ -681,7 +767,7 @@ parse_chat <- function(path,
     # print info
     if (verbose) {cat("Shortened links to domains \U2713 \n")}
 
-    # Anonymizing love locations
+    # Anonymizing live locations
     DF$Location_anon <- DF$Location
     DF$Location_anon[!is.na(DF$Location) & DF$Location != gsub("$","",gsub("^","",LiveLocation, fixed = TRUE),fixed = TRUE)] <- "Location shared"
 

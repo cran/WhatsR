@@ -9,7 +9,7 @@ parse_ios(
   newline_indicator = "\\n",
   media_omitted = "<media omitted>",
   media_indicator = "^<attached:\\\\s(.)*?\\\\.(.)*?>$",
-  sent_location = paste0("Location: (?=https:\\\\/\\\\/maps\\\\.google\\\\.com\\\\/",
+  sent_location = paste0("location: (?=https:\\\\/\\\\/maps\\\\.google\\\\.com\\\\/",
     "\\\\?q=\\\\d\\\\d.\\\\d{6}\\\\,\\\\d\\\\.\\\\d{6})"),
   live_location = "^live location shared$",
   datetime_indicator = paste("(?!^)(?=\\\\[((\\\\d{2}\\\\.\\\\d{2}\\\\.\\\\d{2})|",
@@ -17,7 +17,8 @@ parse_ios(
     "s(?i:(pm|am)))|(\\\\s(?i:(pm|am)))|(\\\\:\\\\d{2}\\\\])|(\\\\:\\\\d{2})|(\\\\s))\\\\])",
     sep = ""),
   newline_replace = " start_newline ",
-  media_replace = " media_omitted "
+  media_replace = " media_omitted ",
+  foursquare_loc = "^.*: https://foursquare.com/v/.*$"
 )
 }
 \arguments{
@@ -38,6 +39,8 @@ parse_ios(
 \item{newline_replace}{Replacement string for a newline character in parsed message. Default is " start_newline ".}
 
 \item{media_replace}{Replacement string for omitted media files. Default is " media_omitted ".}
+
+\item{foursquare_loc}{Regex for detecting sent Locations as FourSquare Links.}
 }
 \value{
 A data frame containing the timestamp, name of the sender and message body

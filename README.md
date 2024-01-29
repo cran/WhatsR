@@ -1,7 +1,14 @@
-# `WhatsR` <img src="inst/WhatsR_sticker.png" align="right" width="250" height="250"/>
-[![DOI](https://zenodo.org/badge/633831271.svg)](https://zenodo.org/badge/latestdoi/633831271) <br> <br>
-This is an R-package to import exported WhatsApp chatlogs, parse them into a usable dataframe format and thereby enable further analysis. This parser was built with the goal to work with chat logs extracted on Android as well as iOS devices, run on Linux, Mac and Windows and to be able to handle multiple languages. Currently, only English and German are supported, but in principle, other languages could be added relatively easily (see below). The repo also contains a function to scrape and update the emoji_dictionary, should new emoji be added to WhatsApp in the meantime.
- 
+# WhatsR
+[![DOI](https://zenodo.org/badge/633831271.svg)](https://zenodo.org/badge/latestdoi/633831271)
+[![R-CMD-check](https://github.com/gesiscss/WhatsR/actions/workflows/r-cmd-check.yml/badge.svg)](https://github.com/gesiscss/WhatsR/actions/workflows/r-cmd-check.yml)
+[![CRAN status](https://www.r-pkg.org/badges/version/WhatsR)](https://www.r-pkg.org/badges/version/WhatsR)
+[![Downloads](https://cranlogs.r-pkg.org/badges/WhatsR)](https://cran.r-project.org/package=WhatsR)
+[![TotalDownloads](https://cranlogs.r-pkg.org/badges/grand-total/WhatsR?color=orange)](https://CRAN.R-project.org/package=WhatsR)
+
+<img src="man/figures/WhatsR_sticker.png" align="right" alt="WhatsR Sticker" width="120">
+
+This is an R-package to import exported WhatsApp chatlogs, parse them into a usable dataframe format and thereby enable further analysis. This parser was built with the goal to work with chat logs extracted on Android as well as iOS devices, run on Linux, Mac and Windows, and to be able to handle multiple languages. Currently, only English and German are supported, but in principle, other languages could be added relatively easily (see below). The repo also contains a function to scrape and update the emoji_dictionary, should new emoji be added to WhatsApp in the meantime.
+
 ## How to set it up?
  
 ### 1) Requirements
@@ -201,7 +208,7 @@ plot_smilies(data, plot = "cumsum", exclude_sm = TRUE)
 Amount of sent emoji per person
 
 ```
-plot_emoji(data, plot = "splitbar", min.occur = 50, exclude_sm = TRUE)
+plot_emoji(data, plot = "splitbar", min_occur = 50, exclude_sm = TRUE)
 ```
 ![](man/figures/plot_emoji()_splitbar.png)
 

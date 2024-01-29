@@ -2,8 +2,8 @@ Package: WhatsR
 Type: Package
 Title: Parsing, Anonymizing and Visualizing Exported 'WhatsApp' Chat
         Logs
-Version: 1.0.2
-Date: 2023-11-17
+Version: 1.0.4
+Date: 2024-01-24
 Author: Julian Kohne <julian.kohne@gesis.org>
 Maintainer: Julian Kohne <julian.kohne@gesis.org>
 Description: Imports 'WhatsApp' chat logs and parses them into
@@ -13,14 +13,14 @@ Description: Imports 'WhatsApp' chat logs and parses them into
     media files from the messages, extracting timestamps from messages, extracting and anonymizing author 
     names from messages. Can be used to create anonymized versions of data.
 License: GPL-3
-Imports: stringi, qdapRegex, readr, tokenizers, stringr, data.table,
-        ggplot2, anytime, mgsub, stats, qdap, ggwordcloud, dplyr, ragg,
-        checkmate, visNetwork, lubridate, methods
+Imports: stringi, qdapRegex, readr, tokenizers, data.table, ggplot2,
+        anytime, mgsub, stats, qdap, ggwordcloud, dplyr, ragg,
+        checkmate, visNetwork, lubridate, methods, ggmap
 Encoding: UTF-8
 RoxygenNote: 7.2.3
 Suggests: extrafont, tm, testthat (>= 3.0.0)
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2023-11-21 14:26:52 UTC; juko
+Packaged: 2024-01-29 22:30:21 UTC; juko
 Repository: CRAN
-Date/Publication: 2023-11-21 15:00:02 UTC
+Date/Publication: 2024-01-29 22:50:02 UTC

@@ -43,7 +43,7 @@ test_that("Updating emoji dictionary",{
 # german android 24h
 test_that("chatlogs: German, android, 24h", {
   test1 <- create_chatlog(
-    n_messages = 200,
+    n_messages = 1450,
     n_chatters = 45,
     n_emoji = 99,
     n_links = 99,
@@ -58,14 +58,14 @@ test_that("chatlogs: German, android, 24h", {
   )
 
   expect_equal(class(test1), "character")
-  expect_equal(length(test1), 200)
+  expect_equal(length(test1), 1450)
 })
 
 # german ios 24 h
 test_that("creating chatlogs: German, ios, 24h", {
   # german android 24h
   test1 <- create_chatlog(
-    n_messages = 200,
+    n_messages = 1450,
     n_chatters = 45,
     n_emoji = 99,
     n_links = 99,
@@ -80,7 +80,7 @@ test_that("creating chatlogs: German, ios, 24h", {
   )
 
   expect_equal(class(test1), "character")
-  expect_equal(length(test1), 200)
+  expect_equal(length(test1), 1450)
 })
 
 
@@ -88,7 +88,7 @@ test_that("creating chatlogs: German, ios, 24h", {
 test_that("creating chatlogs: English, android, 24h", {
   # german android 24h
   test1 <- create_chatlog(
-    n_messages = 200,
+    n_messages = 1450,
     n_chatters = 45,
     n_emoji = 99,
     n_links = 99,
@@ -103,7 +103,7 @@ test_that("creating chatlogs: English, android, 24h", {
   )
 
   expect_equal(class(test1), "character")
-  expect_equal(length(test1), 200)
+  expect_equal(length(test1), 1450)
 })
 
 
@@ -111,7 +111,7 @@ test_that("creating chatlogs: English, android, 24h", {
 test_that("creating chatlogs: English, ios, 24h", {
   # german android 24h
   test1 <- create_chatlog(
-    n_messages = 200,
+    n_messages = 1450,
     n_chatters = 45,
     n_emoji = 99,
     n_links = 99,
@@ -126,7 +126,7 @@ test_that("creating chatlogs: English, ios, 24h", {
   )
 
   expect_equal(class(test1), "character")
-  expect_equal(length(test1), 200)
+  expect_equal(length(test1), 1450)
 })
 
 
@@ -134,7 +134,7 @@ test_that("creating chatlogs: English, ios, 24h", {
 test_that("creating chatlogs: German, android, ampm", {
   # german android 24h
   test1 <- create_chatlog(
-    n_messages = 200,
+    n_messages = 1450,
     n_chatters = 45,
     n_emoji = 99,
     n_links = 99,
@@ -149,7 +149,7 @@ test_that("creating chatlogs: German, android, ampm", {
   )
 
   expect_equal(class(test1), "character")
-  expect_equal(length(test1), 200)
+  expect_equal(length(test1), 1450)
 })
 
 
@@ -157,7 +157,7 @@ test_that("creating chatlogs: German, android, ampm", {
 test_that("creating chatlogs: German, ios, ampm", {
   # german android 24h
   test1 <- create_chatlog(
-    n_messages = 200,
+    n_messages = 1450,
     n_chatters = 45,
     n_emoji = 99,
     n_links = 99,
@@ -172,7 +172,7 @@ test_that("creating chatlogs: German, ios, ampm", {
   )
 
   expect_equal(class(test1), "character")
-  expect_equal(length(test1), 200)
+  expect_equal(length(test1), 1450)
 })
 
 
@@ -180,7 +180,7 @@ test_that("creating chatlogs: German, ios, ampm", {
 test_that("creating chatlogs: English, android, ampm", {
   # german android 24h
   test1 <- create_chatlog(
-    n_messages = 200,
+    n_messages = 1450,
     n_chatters = 45,
     n_emoji = 99,
     n_links = 99,
@@ -195,7 +195,7 @@ test_that("creating chatlogs: English, android, ampm", {
   )
 
   expect_equal(class(test1), "character")
-  expect_equal(length(test1), 200)
+  expect_equal(length(test1), 1450)
 })
 
 
@@ -203,7 +203,7 @@ test_that("creating chatlogs: English, android, ampm", {
 test_that("creating chatlogs: English, ios, ampm", {
   # german android 24h
   test1 <- create_chatlog(
-    n_messages = 200,
+    n_messages = 1450,
     n_chatters = 45,
     n_emoji = 99,
     n_links = 99,
@@ -218,7 +218,7 @@ test_that("creating chatlogs: English, ios, ampm", {
   )
 
   expect_equal(class(test1), "character")
-  expect_equal(length(test1), 200)
+  expect_equal(length(test1), 1450)
 })
 
 
@@ -246,7 +246,7 @@ test_that("Parsing Chatlogs: German, Android, 24h; default", {
 
   # load and check file
   test <- readRDS(system.file("GermanAndroid24H_default.rds", package = "WhatsR"))
-  expect_identical(hush(parse_chat(system.file("germanandroid24h.txt", package = "WhatsR"))), test) # creates warning
+  expect_identical(hush(parse_chat(system.file("germanandroid24h.txt", package = "WhatsR"))), test)
 })
 
 test_that("Parsing Chatlogs: German, Ios, 24h; default", {
@@ -1020,7 +1020,7 @@ test_that("tailoring function", {
   )
 
   # generate and write file [Use this to recreate test files when parse_chat() changed]
-  #saveRDS(tailored_data4,"TailoredData4.rds",version = 2)
+  # saveRDS(tailored_data4,"TailoredData4.rds",version = 2)
 
   test <- readRDS(system.file("TailoredData4.rds", package = "WhatsR"))
   expect_identical(tailored_data4,test)
@@ -1338,88 +1338,87 @@ test_that("Plotting Media", {
   expect_identical(test_media4, test)
 })
 
-# TODO: Reenable test once ggmap update is available on CRAN
-# test_that("Plotting Location", {
-#
-#   # Hushing printing messages resulting from testing environment configuration
-#   hush <- function(code) {
-#     if (.Platform$OS.type == "windows") {
-#       sink("")
-#       sink()
-#
-#     } else {
-#       sink("/dev/null")
-#       sink()
-#     }
-#     tmp <- code
-#   }
-#
-#   data <- parse_chat(system.file("englishiosampm.txt", package = "WhatsR"))
-#
-#   test_location1  <- plot_locations(data,
-#                                     return_data = TRUE,
-#                                     jitter_val = 1,
-#                                     jitter_seed = 123,
-#                                     mapzoom = 10,
-#                                     map_leeway = 0.1,
-#                                     exclude_sm = TRUE)
-#
-#
-#   # generate and write file [Use this to recreate test files when parse_chat() changed]
-#   #saveRDS(test_location1,"test_location1.rds",version = 2)
-#
-#   test <- readRDS(system.file("test_location1.rds", package = "WhatsR"))
-#   expect_identical(test_location1, test)
-#
-#   test_location2  <- plot_locations(data,
-#                                     return_data = TRUE,
-#                                     jitter_val = NA,
-#                                     jitter_seed = 567,
-#                                     mapzoom = 10,
-#                                     map_leeway = 0.1,
-#                                     exclude_sm = TRUE)
-#
-#   # generate and write file [Use this to recreate test files when parse_chat() changed]
-#   #saveRDS(test_location2,"test_location2.rds",version = 2)
-#
-#   test <- readRDS(system.file("test_location2.rds", package = "WhatsR"))
-#   expect_identical(test_location2, test)
-#
-#
-#
-#   test_location3  <- plot_locations(data,
-#                                     return_data = TRUE,
-#                                     jitter_val = 0.5,
-#                                     jitter_seed = 890,
-#                                     mapzoom = 10,
-#                                     map_leeway = 0.1,
-#                                     exclude_sm = TRUE)
-#
-#   # generate and write file [Use this to recreate test files when parse_chat() changed]
-#   #saveRDS(test_location3,"test_location3.rds",version = 2)
-#
-#   test <- readRDS(system.file("test_location3.rds", package = "WhatsR"))
-#   expect_identical(test_location3, test)
-#
-#
-#   test_location4  <- plot_locations(data,
-#                                     return_data = TRUE,
-#                                     jitter_val = 0.5,
-#                                     jitter_seed = 345,
-#                                     mapzoom = 10,
-#                                     map_leeway = 0.3,
-#                                     exclude_sm = TRUE)
-#
-#   # generate and write file [Use this to recreate test files when parse_chat() changed]
-#   #saveRDS(test_location4,"test_location4.rds",version = 2)
-#
-#   test <- readRDS(system.file("test_location4.rds", package = "WhatsR"))
-#   expect_identical(test_location4, test)
-#
-#   # testing if jittering has worked
-#   expect_identical(identical(test_location1$Lat,test_location2$Lat,test_location3$Lat,test_location4$Lat),FALSE)
-#
-# })
+ test_that("Plotting Location", {
+
+   # Hushing printing messages resulting from testing environment configuration
+   hush <- function(code) {
+     if (.Platform$OS.type == "windows") {
+       sink("")
+       sink()
+
+     } else {
+       sink("/dev/null")
+       sink()
+     }
+     tmp <- code
+   }
+
+   data <- parse_chat(system.file("englishiosampm.txt", package = "WhatsR"))
+
+   test_location1  <- plot_locations(data,
+                                     return_data = TRUE,
+                                    jitter_val = 1,
+                                    jitter_seed = 123,
+                                    mapzoom = 10,
+                                     map_leeway = 0.1,
+                                     exclude_sm = TRUE)
+
+
+   # generate and write file [Use this to recreate test files when parse_chat() changed]
+  #saveRDS(test_location1,"test_location1.rds",version = 2)
+
+   test <- readRDS(system.file("test_location1.rds", package = "WhatsR"))
+   expect_identical(test_location1, test)
+
+   test_location2  <- plot_locations(data,
+                                     return_data = TRUE,
+                                     jitter_val = NA,
+                                     jitter_seed = 567,
+                                     mapzoom = 10,
+                                     map_leeway = 0.1,
+                                     exclude_sm = TRUE)
+
+   # generate and write file [Use this to recreate test files when parse_chat() changed]
+   #saveRDS(test_location2,"test_location2.rds",version = 2)
+
+   test <- readRDS(system.file("test_location2.rds", package = "WhatsR"))
+   expect_identical(test_location2, test)
+
+
+
+   test_location3  <- plot_locations(data,
+                                     return_data = TRUE,
+                                     jitter_val = 0.5,
+                                     jitter_seed = 890,
+                                     mapzoom = 10,
+                                     map_leeway = 0.1,
+                                     exclude_sm = TRUE)
+
+   # generate and write file [Use this to recreate test files when parse_chat() changed]
+   #saveRDS(test_location3,"test_location3.rds",version = 2)
+
+   test <- readRDS(system.file("test_location3.rds", package = "WhatsR"))
+   expect_identical(test_location3, test)
+
+
+   test_location4  <- plot_locations(data,
+                                     return_data = TRUE,
+                                     jitter_val = 0.5,
+                                     jitter_seed = 345,
+                                     mapzoom = 10,
+                                     map_leeway = 0.3,
+                                     exclude_sm = TRUE)
+
+   # generate and write file [Use this to recreate test files when parse_chat() changed]
+   #saveRDS(test_location4,"test_location4.rds",version = 2)
+
+   test <- readRDS(system.file("test_location4.rds", package = "WhatsR"))
+   expect_identical(test_location4, test)
+
+   # testing if jittering has worked
+   expect_identical(identical(test_location1$Lat,test_location2$Lat,test_location3$Lat,test_location4$Lat),FALSE)
+
+ })
 
 
 
@@ -1845,8 +1844,8 @@ test_that("Plotting Smilies", {
   # generate and write file [Use this to recreate test files when parse_chat() changed]
   #saveRDS(test_smilies4,"test_smilies4.rds",version = 2)
 
-  test <- readRDS(system.file("test_smilies4.rds", package = "WhatsR"))
-  expect_identical(test_smilies4, test)
+   test <- readRDS(system.file("test_smilies4.rds", package = "WhatsR"))
+   expect_identical(test_smilies4, test)
 })
 
 
@@ -1928,24 +1927,24 @@ test_that("Plotting Wordcloud", {
   expect_identical(test_wc3, test)
 
 
-  # test_wc4 <- plot_wordcloud(data,
-  #   names = "all",
-  #   starttime = "1960-01-01 00:00",
-  #   endtime = as.character(as.POSIXct(Sys.time(), tz = "UTC")),
-  #   remove_stops = FALSE,
-  #   stop = "english",
-  #   comparison = TRUE,
-  #   return_data = TRUE,
-  #   font_size = 10,
-  #   min_occur = 2,
-  #   exclude_sm = TRUE
-  # )
+   test_wc4 <- plot_wordcloud(data,
+     names = "all",
+     starttime = "1960-01-01 00:00",
+     endtime = as.character(as.POSIXct(Sys.time(), tz = "UTC")),
+     remove_stops = FALSE,
+     stop = "english",
+     comparison = TRUE,
+     return_data = TRUE,
+     font_size = 10,
+     min_occur = 2,
+     exclude_sm = TRUE
+   )
 
   # generate and write file [Use this to recreate test files when parse_chat() changed]
   #saveRDS(test_wc4,"test_wc4.rds",version = 2)
 
-  # test <- readRDS(system.file("test_wc4.rds", package = "WhatsR"))
-  # expect_identical(test_wc4, test)
+   test <- readRDS(system.file("test_wc4.rds", package = "WhatsR"))
+   expect_identical(test_wc4, test)
 })
 
 
@@ -1982,8 +1981,6 @@ test_that("Plotting Network", {
   test <- readRDS(system.file("test_network1.rds", package = "WhatsR"))
   expect_identical(test_network1, test)
 
-  # TODO: This fails only when running check from RStudio, not with devtools::test()
-  # Seems to be a bug: https://github.com/hadley/r-pkgs/issues/483
   test_network2 <- plot_network(data,
     names = "all",
     starttime = "1960-01-01 00:00",
@@ -2016,8 +2013,6 @@ test_that("Plotting Network", {
   test <- readRDS(system.file("test_network3.rds", package = "WhatsR"))
   expect_identical(test_network3, test)
 
-  # TODO: This fails only when running check from RStudio, not with devtools::test()
-  # Seems to be a bug: https://github.com/hadley/r-pkgs/issues/483
   test_network4 <- plot_network(data,
     names = "all",
     starttime = "1960-01-01 00:00",
