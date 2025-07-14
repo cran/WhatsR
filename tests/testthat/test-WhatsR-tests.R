@@ -246,7 +246,13 @@ test_that("Parsing Chatlogs: German, Android, 24h; default", {
 
   # load and check file
   test <- readRDS(system.file("GermanAndroid24H_default.rds", package = "WhatsR"))
-  expect_identical(hush(parse_chat(system.file("germanandroid24h.txt", package = "WhatsR"))), test)
+  attributes(test) <- attributes(test)[-c(4)]
+
+  testfile <- hush(parse_chat(system.file("germanandroid24h.txt", package = "WhatsR")))
+  attributes(testfile) <- attributes(testfile)[-c(4)]
+
+  # checking
+  expect_identical(testfile, test)
 })
 
 test_that("Parsing Chatlogs: German, Ios, 24h; default", {
@@ -268,8 +274,16 @@ test_that("Parsing Chatlogs: German, Ios, 24h; default", {
   # test <- parse_chat(system.file("germanios24h.txt", package = "WhatsR"), anonymize = "add")
   # saveRDS(test,"GermanIos24H_default.rds", version = 2)
 
+
+  # load and check file
   test <- readRDS(system.file("GermanIos24H_default.rds", package = "WhatsR"))
-  expect_identical(hush(parse_chat(system.file("germanios24h.txt", package = "WhatsR"))), test)
+  attributes(test) <- attributes(test)[-c(4)]
+
+  testfile <- hush(parse_chat(system.file("germanios24h.txt", package = "WhatsR")))
+  attributes(testfile) <- attributes(testfile)[-c(4)]
+
+  # checking
+  expect_identical(testfile, test)
 })
 
 test_that("Parsing Chatlogs: English, Android, 24h; default", {
@@ -291,8 +305,15 @@ test_that("Parsing Chatlogs: English, Android, 24h; default", {
   # test <- parse_chat(system.file("englishandroid24h.txt", package = "WhatsR"), anonymize = "add")
   # saveRDS(test,"EnglishAndroid24H_default.rds", version = 2)
 
+  # load and check file
   test <- readRDS(system.file("EnglishAndroid24H_default.rds", package = "WhatsR"))
-  expect_identical(hush(parse_chat(system.file("englishandroid24h.txt", package = "WhatsR"))), test)
+  attributes(test) <- attributes(test)[-c(4)]
+
+  testfile <- hush(parse_chat(system.file("englishandroid24h.txt", package = "WhatsR")))
+  attributes(testfile) <- attributes(testfile)[-c(4)]
+
+  # checking
+  expect_identical(testfile, test)
 })
 
 test_that("Parsing Chatlogs: English, ios, 24h; default", {
@@ -314,8 +335,15 @@ test_that("Parsing Chatlogs: English, ios, 24h; default", {
   # test <- parse_chat(system.file("englishios24h.txt", package = "WhatsR"), anonymize = "add")
   # saveRDS(test,"EnglishIos24H_default.rds", version = 2)
 
+  # load and check file
   test <- readRDS(system.file("EnglishIos24H_default.rds", package = "WhatsR"))
-  expect_identical(hush(parse_chat(system.file("englishios24h.txt", package = "WhatsR"))), test)
+  attributes(test) <- attributes(test)[-c(4)]
+
+  testfile <- hush(parse_chat(system.file("englishios24h.txt", package = "WhatsR")))
+  attributes(testfile) <- attributes(testfile)[-c(4)]
+
+  # checking
+  expect_identical(testfile, test)
 
 })
 
@@ -342,8 +370,15 @@ test_that("Parsing Chatlogs: German, Android, ampm; default", {
   # test <- parse_chat(system.file("germanandroidampm.txt", package = "WhatsR"), anonymize = "add")
   # saveRDS(test,"GermanAndroidAMPM_default.rds", version = 2)
 
+  # load and check file
   test <- readRDS(system.file("GermanAndroidAMPM_default.rds", package = "WhatsR"))
-  expect_identical(hush(parse_chat(system.file("germanandroidampm.txt", package = "WhatsR"))), test)
+  attributes(test) <- attributes(test)[-c(4)]
+
+  testfile <- hush(parse_chat(system.file("germanandroidampm.txt", package = "WhatsR")))
+  attributes(testfile) <- attributes(testfile)[-c(4)]
+
+  # checking
+  expect_identical(testfile, test)
 })
 
 test_that("Parsing Chatlogs: German, Ios, ampm; default", {
@@ -365,8 +400,15 @@ test_that("Parsing Chatlogs: German, Ios, ampm; default", {
   # test <- parse_chat(system.file("germaniosampm.txt", package = "WhatsR"), anonymize = "add")
   # saveRDS(test,"GermanIosAMPM_default.rds", version = 2)
 
+  # load and check file
   test <- readRDS(system.file("GermanIosAMPM_default.rds", package = "WhatsR"))
-  expect_identical(hush(parse_chat(system.file("germaniosampm.txt", package = "WhatsR"))), test)
+  attributes(test) <- attributes(test)[-c(4)]
+
+  testfile <- hush(parse_chat(system.file("germaniosampm.txt", package = "WhatsR")))
+  attributes(testfile) <- attributes(testfile)[-c(4)]
+
+  # checking
+  expect_identical(testfile, test)
 })
 
 test_that("Parsing Chatlogs: English, Android, ampm; default", {
@@ -388,8 +430,15 @@ test_that("Parsing Chatlogs: English, Android, ampm; default", {
   # test <- parse_chat(system.file("englishandroidampm.txt", package = "WhatsR"), anonymize = "add")
   # saveRDS(test,"EnglishAndroidAMPM_default.rds", version = 2)
 
+  # load and check file
   test <- readRDS(system.file("EnglishAndroidAMPM_default.rds", package = "WhatsR"))
-  expect_identical(hush(parse_chat(system.file("englishandroidampm.txt", package = "WhatsR"))), test)
+  attributes(test) <- attributes(test)[-c(4)]
+
+  testfile <- hush(parse_chat(system.file("englishandroidampm.txt", package = "WhatsR")))
+  attributes(testfile) <- attributes(testfile)[-c(4)]
+
+  # checking
+  expect_identical(testfile, test)
 })
 
 test_that("Parsing Chatlogs: English, Ios, ampm; default", {
@@ -411,9 +460,15 @@ test_that("Parsing Chatlogs: English, Ios, ampm; default", {
   # test <- parse_chat(system.file("englishiosampm.txt", package = "WhatsR"), anonymize = "add")
   # saveRDS(test,"EnglishIosAMPM_default.rds", version = 2)
 
-  # Problem with start_newline
-  test <- readRDS(system.file("EnglishIosAMPM_default.rds", package = "WhatsR"),)
-  expect_identical(hush(parse_chat(system.file("englishiosampm.txt", package = "WhatsR"))), test)
+  # load and check file
+  test <- readRDS(system.file("EnglishIosAMPM_default.rds", package = "WhatsR"))
+  attributes(test) <- attributes(test)[-c(4)]
+
+  testfile <- hush(parse_chat(system.file("englishiosampm.txt", package = "WhatsR")))
+  attributes(testfile) <- attributes(testfile)[-c(4)]
+
+  # checking
+  expect_identical(testfile, test)
 })
 
 
@@ -972,6 +1027,7 @@ test_that("tailoring function", {
   }
 
   data <- parse_chat(system.file("englishiosampm.txt", package = "WhatsR"), anonymize = "add")
+  attributes(data) <- attributes(data)[-c(4)]
 
   tailored_data1 <- tailor_chat(data,
     names = c("Mallory", "Alice"),
@@ -981,7 +1037,7 @@ test_that("tailoring function", {
   )
 
   # generate and write file [Use this to recreate test files when parse_chat() changed]
-  #saveRDS(tailored_data1,"TailoredData1.rds",version = 2)
+  # saveRDS(tailored_data1,"TailoredData1.rds",version = 2)
 
   test <- readRDS(system.file("TailoredData1.rds", package = "WhatsR"))
   expect_identical(tailored_data1,test)
@@ -994,7 +1050,7 @@ test_that("tailoring function", {
   )
 
   # generate and write file [Use this to recreate test files when parse_chat() changed]
-  #saveRDS(tailored_data2,"TailoredData2.rds",version = 2)
+  # saveRDS(tailored_data2,"TailoredData2.rds",version = 2)
 
   test <- readRDS(system.file("TailoredData2.rds", package = "WhatsR"))
   expect_identical(tailored_data2,test)
@@ -1007,7 +1063,7 @@ test_that("tailoring function", {
   )
 
   # generate and write file [Use this to recreate test files when parse_chat() changed]
-  #saveRDS(tailored_data3,"TailoredData3.rds",version = 2)
+  # saveRDS(tailored_data3,"TailoredData3.rds",version = 2)
 
   test <- readRDS(system.file("TailoredData3.rds", package = "WhatsR"))
   expect_identical(tailored_data3,test)
@@ -1360,7 +1416,6 @@ test_that("Plotting Media", {
                                     jitter_val = 1,
                                     jitter_seed = 123,
                                     mapzoom = 10,
-                                     map_leeway = 0.1,
                                      exclude_sm = TRUE)
 
 
@@ -1375,7 +1430,6 @@ test_that("Plotting Media", {
                                      jitter_val = NA,
                                      jitter_seed = 567,
                                      mapzoom = 10,
-                                     map_leeway = 0.1,
                                      exclude_sm = TRUE)
 
    # generate and write file [Use this to recreate test files when parse_chat() changed]
@@ -1391,7 +1445,6 @@ test_that("Plotting Media", {
                                      jitter_val = 0.5,
                                      jitter_seed = 890,
                                      mapzoom = 10,
-                                     map_leeway = 0.1,
                                      exclude_sm = TRUE)
 
    # generate and write file [Use this to recreate test files when parse_chat() changed]
@@ -1406,7 +1459,6 @@ test_that("Plotting Media", {
                                      jitter_val = 0.5,
                                      jitter_seed = 345,
                                      mapzoom = 10,
-                                     map_leeway = 0.3,
                                      exclude_sm = TRUE)
 
    # generate and write file [Use this to recreate test files when parse_chat() changed]
@@ -1612,6 +1664,7 @@ test_that("Plotting tokens", {
   }
 
   data <- parse_chat(system.file("englishiosampm.txt", package = "WhatsR"))
+  attributes(data) <- attributes(data)[-c(4)]
 
   test_tokens1 <- plot_tokens(data,
     names = "all",
@@ -1623,10 +1676,10 @@ test_that("Plotting tokens", {
   )
 
   # generate and write file [Use this to recreate test files when parse_chat() changed]
-  #saveRDS(test_tokens1,"test_tokens1.rds",version = 2)
+  # saveRDS(test_tokens1,"test_tokens1.rds",version = 2)
 
   test <- readRDS(system.file("test_tokens1.rds", package = "WhatsR"))
-  #expect_identical(test_tokens1, test)
+  # expect_identical(test_tokens1, test)
 
   test_tokens2 <- plot_tokens(data,
     names = "all",
@@ -1638,10 +1691,10 @@ test_that("Plotting tokens", {
   )
 
   # generate and write file [Use this to recreate test files when parse_chat() changed]
-  #saveRDS(test_tokens2,"test_tokens2.rds",version = 2)
+  # saveRDS(test_tokens2,"test_tokens2.rds",version = 2)
 
   test <- readRDS(system.file("test_tokens2.rds", package = "WhatsR"))
-  #expect_identical(test_tokens2, test)
+  # expect_identical(test_tokens2, test)
 
 
   test_tokens3 <- plot_tokens(data,
@@ -1654,10 +1707,10 @@ test_that("Plotting tokens", {
   )
 
   # generate and write file [Use this to recreate test files when parse_chat() changed]
-  #saveRDS(test_tokens3,"test_tokens3.rds",version = 2)
+  # saveRDS(test_tokens3,"test_tokens3.rds",version = 2)
 
   test <- readRDS(system.file("test_tokens3.rds", package = "WhatsR"))
-  #expect_identical(test_tokens3, test)
+  # expect_identical(test_tokens3, test)
 
 
   test_tokens4 <- plot_tokens(data,
@@ -1670,7 +1723,7 @@ test_that("Plotting tokens", {
   )
 
   # generate and write file [Use this to recreate test files when parse_chat() changed]
-  #saveRDS(test_tokens4,"test_tokens4.rds",version = 2)
+  # saveRDS(test_tokens4,"test_tokens4.rds",version = 2)
 
   test <- readRDS(system.file("test_tokens4.rds", package = "WhatsR"))
   expect_identical(test_tokens4, test)
@@ -2047,6 +2100,7 @@ test_that("Plotting Lexical Dispersion", {
   }
 
   data <- parse_chat(system.file("englishiosampm.txt", package = "WhatsR"))
+  attributes(data) <- attributes(data)[-c(4)]
 
   test_lediplo1 <- plot_lexical_dispersion(data,
     names = "all",
@@ -2057,7 +2111,7 @@ test_that("Plotting Lexical Dispersion", {
     exclude_sm = TRUE
   )
   # generate and write file [Use this to recreate test files when parse_chat() changed]
-  #saveRDS(test_lediplo1,"test_lediplo1.rds",version = 2)
+  # saveRDS(test_lediplo1,"test_lediplo1.rds",version = 2)
 
   test <- readRDS(system.file("test_lediplo1.rds", package = "WhatsR"))
   expect_identical(test_lediplo1, test)
@@ -2073,7 +2127,7 @@ test_that("Plotting Lexical Dispersion", {
   )
 
   # generate and write file [Use this to recreate test files when parse_chat() changed]
-  #saveRDS(test_lediplo2,"test_lediplo2.rds",version = 2)
+  # saveRDS(test_lediplo2,"test_lediplo2.rds",version = 2)
 
   test <- readRDS(system.file("test_lediplo2.rds", package = "WhatsR"))
   expect_identical(test_lediplo2, test)
@@ -2089,7 +2143,7 @@ test_that("Plotting Lexical Dispersion", {
   )
 
   # generate and write file [Use this to recreate test files when parse_chat() changed]
-  #saveRDS(test_lediplo3,"test_lediplo3.rds",version = 2)
+  # saveRDS(test_lediplo3,"test_lediplo3.rds",version = 2)
 
 
   test <- readRDS(system.file("test_lediplo3.rds", package = "WhatsR"))
@@ -2105,7 +2159,7 @@ test_that("Plotting Lexical Dispersion", {
   )
 
   # generate and write file [Use this to recreate test files when parse_chat() changed]
-  #saveRDS(test_lediplo4,"test_lediplo4.rds",version = 2)
+  # saveRDS(test_lediplo4,"test_lediplo4.rds",version = 2)
 
 
   test <- readRDS(system.file("test_lediplo4.rds", package = "WhatsR"))
